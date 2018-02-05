@@ -1,0 +1,57 @@
+{% set name = "hhsuite" %}
+{% set version = environ.get("GIT_DESCRIBE_TAG", "0.0.0") | replace("-", ".") %}
+# sha256 is the prefered checksum -- you can get it for a file with:
+#  `openssl sha256 <file name>`.
+# You may need the openssl package, available on conda-forge
+#  `conda install openssl -c conda-forge``
+
+package:
+  name: {{ name | lower }}
+  version: {{ version }}
+
+source:
+  - git_url: https://github.com/soedinglab/hh-suite.git
+    git_rev: master
+    patches:
+      - makefiles.patch
+  - path: env_vars
+
+build:
+  number: 0
+  string: {{ architecture }}
+  features:
+  - arch_{{ architecture }}
+  script: |
+    mkdir build-{{ architecture }}
+    cd build-{{ architecture }}
+    cmake \
+     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+     -G "Unix Makefiles" \
+     -DARCH={{ architecture }} \
+     -DCMAKE_INSTALL_PREFIX=$PREFIX ..
+    make
+    make install
+
+    install -d -m755 ${PREFIX}/share/hhsuite
+    mv ${PREFIX}/hhsuite-userguide.pdf ${PREFIX}/share/hhsuite
+    mv ${PREFIX}/lib64 ${PREFIX}/lib
+    mv ${PREFIX}/scripts ${PREFIX}/share/hhsuite/
+    mv ${PREFIX}/data ${PREFIX}/share/hhsuite/
+
+    install -m755 -d "$PREFIX/etc/conda/activate.d"
+    install -m755 -d "$PREFIX/etc/conda/deactivate.d"
+    install -m755 "../activate.d/hhsuite.sh" "$PREFIX/etc/conda/activate.d"
+    install -m755 "../deactivate.d/hhsuite.sh" "$PREFIX/etc/conda/deactivate.d"
+
+
+requirements:
+  build:
+    - cmake
+    - make
+    - {{ compiler('cxx') }}
+  host:
+    - libgcc-ng
+
+about:
+  home: https://github.com/soedinglab/hh-suite
+  license: GPL2

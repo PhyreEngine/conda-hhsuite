@@ -1,0 +1,59 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 95e6f52..59f8c34 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,6 +6,9 @@ SET(HAVE_AVX2 0 CACHE BOOL "Have AVX2")
+ 
+ #set(CMAKE_BUILD_TYPE Release)
+ 
++set(CMAKE_CXX_STANDARD 11)
++set(CMAKE_CXX_STANDARD_REQUIRED ON)
++
+ # find compiler
+ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+   message("-- Compiler is clang(++)")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 00e962c..691a69e 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -9,32 +9,18 @@ if(${HAVE_SANITIZER})
+ endif()
+ 
+ 
+-if(X86 OR X86_64)
++set(Architectures sandybridge ivybridge haswell broadwell skylake)
++set(SseArch sandybridge ivybridge haswell broadwell skylake)
++set(AvxArch sandybridge ivybridge haswell broadwell skylake)
++set(Avx2Arch haswell broadwell skylake)
+ 
+-#SSE
+-if(${HAVE_AVX2})
++cmake_policy(VERSION 3.5.2)
++if(${ARCH} IN_LIST Avx2Arch)
+     ADD_DEFINITIONS("-DAVX2")
+-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx2 -Wa,-q")
+-elseif(${HAVE_SSE2})
++elseif(${ARCH} IN_LIST SseArch)
+     ADD_DEFINITIONS("-DSSE")
+-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse -msse2")
+-else()
+-    include(CheckSSEFeatures)
+-    ADD_DEFINITIONS(${CXX_DFLAGS})
+-    if(${HAVE_AVX2_EXTENSIONS})
+-        ADD_DEFINITIONS("-DAVX2")
+-    elseif(${HAVE_SSE2_EXTENSIONS})
+-        ADD_DEFINITIONS("-DSSE")
+-    else()
+-        message( FATAL_ERROR "SSE2 is needed to run compile! CMake will exit." )
+-    endif(${HAVE_AVX2_EXTENSIONS})
+ endif()
+-
+-else() #
+-
+-message("!! NOT X86 OR X86_64 !!")
+-
+-endif() # NOT X86 OR X86_64
++set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=${ARCH}")
+ 
+ 
+ 
