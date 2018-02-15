@@ -21,9 +21,9 @@ index 00e962c..691a69e 100644
  
  
 -if(X86 OR X86_64)
-+set(Architectures sandybridge ivybridge haswell broadwell skylake)
-+set(SseArch sandybridge ivybridge haswell broadwell skylake)
-+set(AvxArch sandybridge ivybridge haswell broadwell skylake)
++set(Architectures sandybridge ivybridge haswell broadwell skylake bdver2)
++set(SseArch sandybridge ivybridge haswell broadwell skylake bdver2)
++set(AvxArch sandybridge ivybridge haswell broadwell skylake bdver2)
 +set(Avx2Arch haswell broadwell skylake)
  
 -#SSE
