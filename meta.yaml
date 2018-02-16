@@ -23,7 +23,7 @@ source:
   - path: env_vars
 
 build:
-  number: 0
+  number: 1
   string: {{ architecture }}
   features:
   - arch_{{ architecture }}
@@ -37,6 +37,13 @@ build:
      -DCMAKE_INSTALL_PREFIX=$PREFIX ..
     make
     make install
+
+    # Make scripts relocatable by replacing hard-coded paths with placeholder
+    soeding_prefix=/cluster/toolkit/production/bioprogs
+    placehold_prefix=/opt/anaconda1anaconda2anaconda3
+    sed -i "s|$soeding_prefix/blast/bin|$placehold_prefix/bin|" "${PREFIX}/scripts/HHPaths.pm"
+    sed -i "s|$soeding_prefix/psipred/data|$placehold_prefix/share/psipred/data|" "${PREFIX}/scripts/HHPaths.pm"
+    sed -i "s|$soeding_prefix/psipred/bin|$placehold_prefix/bin|" "${PREFIX}/scripts/HHPaths.pm"
 
     install -d -m755 ${PREFIX}/share/hhsuite
     mv ${PREFIX}/hhsuite-userguide.pdf ${PREFIX}/share/hhsuite
