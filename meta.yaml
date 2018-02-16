@@ -64,6 +64,8 @@ requirements:
     - {{ compiler('cxx') }}
   host:
     - libgcc-ng
+  run:
+    - psipred
 
 about:
   home: https://github.com/soedinglab/hh-suite
