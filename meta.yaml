@@ -26,8 +26,7 @@ source:
   - path: env_vars
 
 build:
-  number: 1
-  string: {{ architecture }}
+  string: {{ architecture }}_{{ environ.get("BUILD_NUMBER", 0) }}
   features:
   - arch_{{ architecture }}
   script: |
