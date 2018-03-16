@@ -64,8 +64,10 @@ requirements:
     - {{ compiler('cxx') }}
   host:
     - libgcc-ng
+    - openmpi
   run:
     - psipred
+    - openmpi
 
 about:
   home: https://github.com/soedinglab/hh-suite
