@@ -1,7 +1,10 @@
 {% set name = "hhsuite" %}
+
+# Get version string from git. Either use the abbreviated commit hash, or
+# preferably use the output of "git describe".
 {% set version = environ["GIT_FULL_HASH"][0:7] %}
 {% if "GIT_DESCRIBE_TAG" in environ %}
-{%     set version = environ["GIT_DESCRIBE_TAG"] | replace("-", "_") %}
+{%     set version = environ["GIT_DESCRIBE_TAG"] | replace("v", "") | replace("-", "_") %}
 {%     if "GIT_DESCRIBE_NUMBER" in environ and environ["GIT_DESCRIBE_NUMBER"] | int > 0 %}
 {%         set version = version ~ "_" ~ environ["GIT_BUILD_STR"] %}
 {%     endif %}
