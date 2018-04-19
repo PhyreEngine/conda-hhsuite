@@ -9,7 +9,7 @@ tool for remote homology detection via Hidden Markov Model matching.
 
 ## Building
 
-You should be able to build this package by simply running `conda build .`.
+You should be able to build this package by simply running `./build`.
 
 ## Patches
 
